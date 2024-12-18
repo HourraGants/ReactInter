@@ -5,35 +5,31 @@ import "./App.css";
 
 const sampleEmployee = {
   name: {
-    first: "Charlie",
-    last: "Thompson",
+    first: "Leon",
+    last: "Dixon",
   },
-  email: "charlie.thompson@example.com",
+  email: "leon.dixon@example.com",
   picture: {
-    medium: "https://randomuser.me/api/portraits/med/men/40.jpg",
-  },
-};
-
-const newEmployee = {
-  name: {
-    first: "Isac",
-    last: "Nøttveit",
-  },
-  email: "isac.nottveit@example.com",
-  picture: {
-    medium: "https://randomuser.me/api/portraits/med/men/88.jpg",
+    medium: "https://randomuser.me/api/portraits/med/men/51.jpg",
   },
 };
 
 function App() {
   const [employee, setEmployee] = useState(sampleEmployee);
+  const [isLoading, setIsLoading] = useState(false);
 
   const getEmployee = () => {
-    // Send the request
+    setIsLoading(true);
     fetch("https://randomuser.me/api?nat=en")
       .then((response) => response.json())
       .then((data) => {
         setEmployee(data.results[0]);
+      })
+      .catch((error) => {
+        console.error(error);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   };
 
@@ -41,8 +37,8 @@ function App() {
     <>
       <div className="App">
         <EmployeeCard employee={employee} />
-        <button type="button" onClick={getEmployee}>
-          Get employee
+        <button type="button" onClick={getEmployee} disabled={isLoading}>
+          {isLoading ? "Loading..." : "Get employee"}
         </button>
       </div>
     </>
